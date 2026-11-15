@@ -15,12 +15,12 @@ void Customer_login(void);
 void bank_task(void);
 void customer_task(char);
 void create_account(void);
-void edit_account(void);
+void edit_account(char);
 void show_account(void);
 void delete_account(void);
-int deposit(account_number, amount);
-int withdraw(account_number, amount);
-
+int deposit(char);
+int withdraw(char);
+int balance_enquiry(char); 
 int main()
 {
     int choice;
@@ -77,7 +77,8 @@ void Customer_login()
         {
             printf("Hello %s \nYour account details is being fetched", Acc_details[i].name);
             res=0;
-            customer_task();
+            char *c = Acc_details[i].acc_number;
+            customer_task(c);
         }}while(res);
         if(res)
         {
@@ -112,7 +113,8 @@ void bank_task()
             bank_task();
     }
 }
-void customer_task(char ){
+void customer_task(char *acc_num)
+{
     int choice;
     printf("Choose your task from below:\n1.Deposit money\n2.Withdraw money\n3.balance enquiry\n4.Exit\n");
     printf("Enter your choice:\n");
@@ -120,18 +122,42 @@ void customer_task(char ){
     switch (choice)
     {
         case 1:
-            deposit();
+            deposit(acc_num);
             break;
         case 2:
-            withdraw();
+            withdraw(acc_num);
             break;
         case 3:
-            balance_enquiry();
+            balance_enquiry(acc_num);
             break;
         case 4:
             exit(0);
         default:
             printf("Enter a valid choice from 1 to 4\n");
-            customer_task();
+            customer_task(acc_num);
     }
+}
+void create_account(){
+    
+}
+void edit_account(char acc_num){
+    
+}
+void show_account(){
+    
+}
+void delete_account(){
+    
+}
+int deposit(char acc_num){
+    
+}
+int withdraw(char acc_num){
+    
+}
+int balance_enquiry(char acc_num){
+    
+}
+void home(){
+    main();
 }
