@@ -140,9 +140,54 @@ void customer_task(char *acc_num)// Menu for Customer Operations
     }
 }
 // Placeholder function definitions for banking operations
-void create_account(){
-    
+void create_account()
+{
+    int i;
+    if (total_accounts >= 100) {
+        printf("Bank database is full! Cannot create more accounts.\n");
+        bank_task();
+        return;
+    }
+
+    char new_acc[11];
+    printf("\n--- Create New Bank Account ---\n");
+    printf("Enter a 10-digit Account Number: ");
+    scanf("%s", new_acc);
+
+    // Validate 10-digit length
+    if (strlen(new_acc) != 10) {
+        printf("Error: Account number must be exactly 10 digits.\n");
+        create_account();
+        return;
+    }
+
+    // Check if account number already exists
+    for (i = 0; i < total_accounts; i++) {
+        if (strcmp(Acc_details[i].acc_number, new_acc) == 0) {
+            printf("Error: Account number already exists!\n");
+            create_account();
+            return;
+        }
+    }
+
+    strcpy(Acc_details[total_accounts].acc_number, new_acc);
+
+    printf("Enter Customer Name: ");
+    scanf(" %[^\n]", Acc_details[total_accounts].name);
+
+    printf("Enter Initial Deposit Amount: ");
+    scanf("%f", &Acc_details[total_accounts].balance);
+
+    if (Acc_details[total_accounts].balance < 0) {
+        Acc_details[total_accounts].balance = 0;
+        printf("Negative amount not allowed. Initial balance set to 0.\n");
+    }
+
+    total_accounts++;
+    printf("Account created successfully!\n\n");
+    bank_task();
 }
+
 void edit_account(char acc_num){
     
 }
