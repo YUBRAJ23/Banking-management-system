@@ -18,14 +18,14 @@ void bank_task(void);
 void customer_task(char *);
 void create_account(void);
 void show_account(void);
-int deposit(char *);
-int withdraw(char *);
-int balance_enquiry(char *);
+void deposit(char *);
+void withdraw(char *);
+void balance_enquiry(char *);
 int valid_mobile_number(char *);
 void load_accounts(void);
 int save_accounts(void);
 int next_account_number = 1001;
-int main()
+void main()
 {
     int choice;
     load_accounts();
@@ -34,7 +34,7 @@ int main()
     printf("=================================================");
     printf("\n-------------Login page--------------\n");
     printf("Enter Login Type:\n1.Bank official login\n2.Customer login\n3.Exit\n");
-    scanf("%d", &choice);
+    scanf(" %d", &choice);
     switch (choice)
     {
     case 1:
@@ -49,6 +49,7 @@ int main()
     default:
         printf("Enter a valid choice either 1, 2 or 3\n");
         main();
+        return;
     }
 }
 void Bank_login()
@@ -56,94 +57,116 @@ void Bank_login()
     char u_name[10], pass[10];
     char name[] = "admin", password[] = "cgu@2026";
     printf("Enter username:\n");
-    scanf("%s", u_name);
+    scanf(" %s", u_name);
     printf("Enter Password:\n");
-    scanf("%s", pass);
+    scanf(" %s", pass);
     if (strcmp(u_name, name) == 0 && strcmp(pass, password) == 0)
     {
         bank_task();
+        return;
     }
     else
     {
         printf("Invalid Username or password\n");
         Bank_login();
+        return;
     }
 }
 void Customer_login()
 {
     char a_num[10];
-    printf("Enter your account number:\n");
-    scanf("%s", &a_num);
-    int i = 0;
-    int res = 1;
-    if (strlen(a_num) != 4)
+    while (1)
     {
-        printf("Enter a four digit account number\n");
-        Customer_login();
-    }
-    for (int i = 0; i < 100; ++i)
-    {
-        if (strcmp(a_num, Acc_details[i].acc_number) == 0)
+        printf("Enter your account number:\n");
+        scanf(" %s", &a_num);
+        int i = 0;
+        int run = 1;
+        if (strlen(a_num) != 4)
         {
-            printf("Hello %s\nYour account details are being fetched.\n", Acc_details[i].name);
-            customer_task(Acc_details[i].acc_number);
+            printf("Enter a four digit account number\n");
+            continue;
         }
+        for(i=0;i<4;i++){
+            if(a_num[i] < '0' || a_num[i] > '9' )
+            {
+                printf("Account number must contain only digits.\n");
+                run=0;
+                break;
+            }
+        }
+        if(run==0)
+            continue;
+        for (i = 0; i < 100; ++i)
+        {
+            if (strcmp(a_num, Acc_details[i].acc_number) == 0)
+            {
+                printf("Hello %s\nYour account details are being fetched.\n", Acc_details[i].name);
+                customer_task(Acc_details[i].acc_number);
+                return;
+            }
+        }
+        if(i==99)
+        {
+            printf("Account number not found. Please enter a valid account number.\n");
+            continue;
+        }
+
     }
-    printf("Invalid account number..Back to main menu.\n");
-    main();
 }
 void bank_task()
 {
     int choice;
-    printf("Choose your task from below:\n1.Create new bank Account\n2.Show complete datails of registered bank account\n3.Back to main menu\n");
-    printf("Enter your choice:\n");
-    if (scanf("%d", &choice) != 1)
-    {
-        printf("Invalid input.Enter valid choice .\n");
-        bank_task();
-    }
-    switch (choice)
-    {
-    case 1:
-        create_account();
-        break;
-    case 2:
-        show_account();
-        break;
-    case 3:
-        main();
-    default:
-        printf("Enter a valid choice from 1 to 3\n");
-        bank_task();
+    while(1){
+        printf("Choose your task from below:\n1.Create new bank Account\n2.Show complete datails of registered bank account\n3.Back to login menu\n");
+        printf("Enter your choice:\n");
+        if (scanf(" %d", &choice) != 1|| choice < 1 || choice > 3)
+        {
+            printf("Invalid input.Enter valid choice .\n");
+            continue;
+        }
+        else{
+            switch (choice)
+            {
+            case 1:
+                create_account();
+                break;
+            case 2:
+                show_account();
+                break;
+            case 3:
+                main();
+                return;
+            }
+            break;
+        }
     }
 }
 void customer_task(char *acc_num)
 {
     int choice;
-    printf("Choose your task from below:\n1.Deposit money\n2.Withdraw money\n3.balance enquiry\n4.Back to main menu \n");
-    printf("Enter your choice:\n");
-    if (scanf("%d", &choice) != 1)
-    {
-        printf("Invalid input. Enter valid choice .\n");
-        customer_task(acc_num);
-    }
-    switch (choice)
-    {
-    case 1:
-        deposit(acc_num);
-        break;
-    case 2:
-        withdraw(acc_num);
-        break;
-    case 3:
-        balance_enquiry(acc_num);
-        break;
-    case 4:
-        main();
-        break;
-    default:
-        printf("Enter a valid choice from 1 to 4\n");
-        customer_task(acc_num);
+    while(1){
+        printf("Choose your task from below:\n1.Deposit money\n2.Withdraw money\n3.balance enquiry\n4.Back to customer menu \n");
+        printf("Enter your choice:\n");
+        if (scanf(" %d", &choice) != 1 || choice < 1 || choice > 4)
+        {
+            printf("Invalid input. Enter valid choice .\n");
+            continue;
+        }
+        switch (choice)
+        {
+        case 1:
+            deposit(acc_num);
+            break;
+        case 2:
+            withdraw(acc_num);
+            break;
+        case 3:
+            balance_enquiry(acc_num);
+            break;
+        case 4:
+            Customer_login();
+            return;
+        }
     }
 }
 void create_account()
@@ -159,24 +182,32 @@ void create_account()
     }
     if (slot == -1)
     {
-        printf("Maximum account limit reached.\n");
+        printf("Maximum account limit reached.Cannot create new account.\n");
         main();
+        return;
     }
-    char anum[5], name[20], mobile[11];
-    if (next_account_number > 2000)
-    {
-        printf("Maximum account limit reached. Cannot create new account.\n");
-        main();
-    }
+    char anum[5], name[20], mobile[11], acc_type[10];
     printf("Enter customer name:\n");
     scanf(" %[^\n]", name);
+    for(int i=0;i<strlen(name);i++)
+    {
+        if((name[i]<'A' || name[i]>'Z') && (name[i]<'a' || name[i]>'z') && name[i]!=' ')
+        {
+            printf("Name must contain only alphabets and spaces. Account was not created.\n");
+            bank_task();
+            return;
+        }
+    }
     printf("Enter ten digit mobile number: ");
     scanf(" %[^\n]", mobile);
     if (!valid_mobile_number(mobile))
     {
-        printf("Mobile number must contain exactly ten digits. Account was not created.\n");
+        printf("Mobile number must contain exactly ten digits and numbers. Account was not created.\n");
         bank_task();
+        return;
     }
+    printf("Enter account type (savings/current): ");
+    scanf(" %[^\n]", acc_type);
     printf("Enter opening balance: ");
     if (scanf("%f", &Acc_details[slot].balance) != 1 || Acc_details[slot].balance < 0)
     {
@@ -188,6 +219,7 @@ void create_account()
     strcpy(Acc_details[slot].acc_number, anum);
     strcpy(Acc_details[slot].name, name);
     strcpy(Acc_details[slot].mob_number, mobile);
+    strcpy(Acc_details[slot].acc_type, acc_type);
     ++next_account_number;
     if (save_accounts())
     {
@@ -208,20 +240,21 @@ void create_account()
 void show_account()
 {
     int found = 0;
-    printf("\n%s %s %s \n", "Account Number", "Customer Name", "Balance");
+    printf("%s %s %s %s\n", "Account Number", "Customer Name", "Balance", "Account Type");
     for (int i = 0; i < 100; ++i)
     {
         if (Acc_details[i].acc_number[0] != '\0')
         {
-            printf("%s %s %.2f\n", Acc_details[i].acc_number, Acc_details[i].name, Acc_details[i].balance);
+            printf("%s %s %.2f %s\n", Acc_details[i].acc_number, Acc_details[i].name, Acc_details[i].balance, Acc_details[i].acc_type);
             found = 1;
         }
     }
     if (!found)
         printf("No accounts have been registered.\n");
     bank_task();
+    return;
 }
-int deposit(char *acc_num)
+void deposit(char *acc_num)
 {
     float amount;
     int i;
@@ -231,16 +264,17 @@ int deposit(char *acc_num)
             break;
     }
     printf("Enter amount to deposit: ");
-    if (scanf("%f", &amount) != 1 || amount <= 0)
+    if (scanf(" %f", &amount) != 1 || amount <= 0)
     {
         printf("Enter a valid positive amount.\n");
         deposit(acc_num);
     }
     Acc_details[i].balance += amount;
     printf("Deposit successful.\nUpdated balance: %.2f\n", Acc_details[i].balance);
-    main();
+    customer_task(acc_num);
+    return;
 }
-int withdraw(char *acc_num)
+void withdraw(char *acc_num)
 {
     float amount;
     int i;
@@ -250,27 +284,29 @@ int withdraw(char *acc_num)
             break;
     }
     printf("Enter amount to withdraw: ");
-    if (scanf("%f", &amount) != 1 || amount <= 0)
+    if (scanf(" %f", &amount) != 1 || amount <= 0)
     {
         printf("Enter a valid positive amount.\n");
         withdraw(acc_num);
     }
     Acc_details[i].balance -= amount;
     printf("Withdrawal successful.\nUpdated balance: %.2f\n", Acc_details[i].balance);
-    main();
+    customer_task(acc_num);
+    return;
 }
-int balance_enquiry(char *acc_num)
+void balance_enquiry(char *acc_num)
 {
     for (int i = 0; i < 100; i++)
     {
         if (strcmp(acc_num, Acc_details[i].acc_number) == 0)
         {
             printf("Account balance: %.2f\n", Acc_details[i].balance);
-            main();
+            customer_task(acc_num);
+            return;
         }
     }
     printf("Account not found.\n");
-    main();
+    customer_task(acc_num);
 }
 int valid_mobile_number(char *number)
 {
@@ -284,7 +320,7 @@ int valid_mobile_number(char *number)
 
 void load_accounts(void)
 {
-    FILE *file = fopen("bank.csv", "r");
+    FILE *file = fopen("Bank_data.csv", "r");
     char line[256];
     int slot = 0;
     if (file == NULL)
@@ -385,9 +421,29 @@ void load_accounts(void)
         float balance = strtof(p, &balance_end);
         if (balance_end == p || balance < 0)
             continue;
+        char account_type[sizeof Acc_details[slot].acc_type] = "";
+        if (*balance_end == ',')
+        {
+            char *type_start = balance_end + 1;
+            char *type_end = strpbrk(type_start, "\r\n");
+            if (type_end == NULL)
+                type_end = type_start + strlen(type_start);
+
+            size_t type_length = (size_t)(type_end - type_start);
+            if (type_length >= 2 && type_start[0] == '"' && type_end[-1] == '"')
+            {
+                ++type_start;
+                type_length -= 2;
+            }
+            if (type_length >= sizeof account_type)
+                continue;
+            memcpy(account_type, type_start, type_length);
+            account_type[type_length] = '\0';
+        }
         strcpy(Acc_details[slot].acc_number, number);
         strcpy(Acc_details[slot].name, name);
         strcpy(Acc_details[slot].mob_number, mobile);
+        strcpy(Acc_details[slot].acc_type, account_type);
         Acc_details[slot].balance = balance;
         unsigned long long existing_number = strtoull(number, NULL, 10);
         if (existing_number >= 1001 && existing_number <= 2000 &&
@@ -400,10 +456,10 @@ void load_accounts(void)
 
 int save_accounts(void)
 {
-    FILE *file = fopen("bank.csv", "w");
+    FILE *file = fopen("Bank_data.csv", "w");
     if (file == NULL)
         return 0;
-    fputs("account_number,name,mobile_number,balance\n", file);
+    fputs("account_number,name,mobile_number,balance,account_type\n", file);
     if (fprintf(file, "#NEXT_ACCOUNT_NUMBER,%d\n", next_account_number) < 0)
     {
         fclose(file);
@@ -431,7 +487,7 @@ int save_accounts(void)
                 return 0;
             }
         }
-        if (fprintf(file, "\",%s,%.2f\n", Acc_details[i].mob_number, Acc_details[i].balance) < 0)
+        if (fprintf(file, "\",%s,%.2f,%s\n", Acc_details[i].mob_number, Acc_details[i].balance, Acc_details[i].acc_type) < 0)
         {
             fclose(file);
             return 0;

@@ -1,7 +1,5 @@
-account_number,name,mobile_number,balance
-#NEXT_ACCOUNT_NUMBER,1006
-1001,"yubraj thakur",7978522845,5000.00
-1002,"ujjwal raj ",5463217896,10000.00
-1003,"vartika ",7854693215,78000.00
-1004,"yashraj",7852369416,52000.00
-1005,"vavya",7978541236,56000.00
+account_number,name,mobile_number,balance,account_type
+#NEXT_ACCOUNT_NUMBER,1004
+1001,"yubraj thakur",7978522845,500000.00,current
+1002,"yubraj singh",5632415836,5000.00,savings
+1003,"ujjwal raj",8654793214,800000.00,current
