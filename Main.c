@@ -30,7 +30,7 @@ void main()
     int choice;
     load_accounts();
     printf("=================================================");
-    printf("\nWelcome to our banking Management syatem\n");
+    printf("\nWelcome to our banking Management system\n");
     printf("=================================================");
     printf("\n-------------Login page--------------\n");
     printf("Enter Login Type:\n1.Bank official login\n2.Customer login\n3.Exit\n");
@@ -105,7 +105,7 @@ void Customer_login()
                 return;
             }
         }
-        if(i==99)
+        if(i==100)
         {
             printf("Account number not found. Please enter a valid account number.\n");
             continue;
@@ -117,7 +117,7 @@ void bank_task()
 {
     int choice;
     while(1){
-        printf("Choose your task from below:\n1.Create new bank Account\n2.Show complete datails of registered bank account\n3.Back to login menu\n");
+        printf("Choose your task from below:\n1.Create new bank Account\n2.Show complete details of registered bank account\n3.Back to login menu\n");
         printf("Enter your choice:\n");
         if (scanf(" %d", &choice) != 1|| choice < 1 || choice > 3)
         {
@@ -125,7 +125,7 @@ void bank_task()
             continue;
         }
         else{
-            switch (choice)
+            switch (choice)++
             {
             case 1:
                 create_account();
@@ -145,7 +145,7 @@ void customer_task(char *acc_num)
 {
     int choice;
     while(1){
-        printf("Choose your task from below:\n1.Deposit money\n2.Withdraw money\n3.balance enquiry\n4.Back to customer menu \n");
+        printf("Choose your task from below:\n1.Deposit money\n2.Withdraw money\n3.balance enquiry\n4.Back to home \n");
         printf("Enter your choice:\n");
         if (scanf(" %d", &choice) != 1 || choice < 1 || choice > 4)
         {
@@ -164,7 +164,7 @@ void customer_task(char *acc_num)
             balance_enquiry(acc_num);
             break;
         case 4:
-            Customer_login();
+            main();
             return;
         }
     }
@@ -271,7 +271,7 @@ void deposit(char *acc_num)
     }
     Acc_details[i].balance += amount;
     printf("Deposit successful.\nUpdated balance: %.2f\n", Acc_details[i].balance);
-    customer_task(acc_num);
+    main();
     return;
 }
 void withdraw(char *acc_num)
@@ -291,7 +291,7 @@ void withdraw(char *acc_num)
     }
     Acc_details[i].balance -= amount;
     printf("Withdrawal successful.\nUpdated balance: %.2f\n", Acc_details[i].balance);
-    customer_task(acc_num);
+    main();
     return;
 }
 void balance_enquiry(char *acc_num)
@@ -301,12 +301,12 @@ void balance_enquiry(char *acc_num)
         if (strcmp(acc_num, Acc_details[i].acc_number) == 0)
         {
             printf("Account balance: %.2f\n", Acc_details[i].balance);
-            customer_task(acc_num);
+            main();
             return;
         }
     }
     printf("Account not found.\n");
-    customer_task(acc_num);
+    main();
 }
 int valid_mobile_number(char *number)
 {
